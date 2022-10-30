@@ -7,6 +7,7 @@
 #include <iostream>
 #include "connection/singleton_base.h"
 #include "connection/singleton_base.h"
+#include "connection/connection_pool.h"
 #include "connection/connection.h"
 #include "prepare_stmt/prepare_stmt.h"
 #include "data_struct/user.h"
@@ -32,16 +33,18 @@ int main() {
   auto ps = std::make_unique<PrepareStatement>(conn);
   ps->Prepare(ss.str());
 
-  // ps->GetMetaData();
+  auto meta = ps->GetMetaData();
+
+  std::cout << "meta size:" << meta.size() << std::endl;
+
+  //User user;
+  //ps->BindResult(user);
 
   long limit = 10;
   ps->SetInt(0, limit);
 
-  User user;
-  ps->BindResult(user);
-
   std::vector<User> users;
-  ps->Query(users);
+  ps->Query(users, meta);
 
   // printf("handle current row here, %d,%s,%s,%d\n", user.id, user.name, user.email, user.age);
 

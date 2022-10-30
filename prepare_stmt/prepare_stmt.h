@@ -15,6 +15,9 @@
 #include "connection/connection.h"
 #include "data_struct/user.h"
 #include <vector>
+#include <map>
+#include <any>
+#include <memory>
 
 class PrepareStatement {
 
@@ -99,9 +102,9 @@ public:
   /*
      * 查询
      * */
-  //template <class T>
-  //void Query(std::vector<T>& obj) {
-  void Query(std::vector<User>& obj) {
+  template <class T>
+  void Query(std::vector<T>& obj, std::map<std::string, std::any>& res) {
+//  void Query(std::vector<User>& obj) {
 
     // 1. 执行
     if (mysql_stmt_execute(mysql_stmt_))
@@ -131,20 +134,26 @@ public:
       //           printf("handle current row here, %d,%s,%s,%d \n", *(int*)bind_result_[0].buffer, (char*)bind_result_[1].buffer,
       //                   (char*)bind_result_[2].buffer, *(int*)bind_result_[3].buffer);
 
-      /************* 固定类型 **************/
-      User user;
-      user.id = *(int*)bind_result_[0].buffer;
-      memcpy(user.name, (char*)bind_result_[1].buffer, 16);
-      memcpy(user.email, (char*)bind_result_[2].buffer, 128);
-      user.age = *(int*)bind_result_[3].buffer;
+      for (auto it = res.begin(); it != res.end(); ++it) {
 
-      obj.emplace_back(user);
+        std::cout << "####" << it->first<< "," << std::any_cast<>(it) ;
+      }
+      std::cout << std::endl;
+      /************* 固定类型 **************/
+//      User user;
+//      user.id = *(int*)bind_result_[0].buffer;
+//      memcpy(user.name, (char*)bind_result_[1].buffer, 16);
+//      memcpy(user.email, (char*)bind_result_[2].buffer, 128);
+//      user.age = *(int*)bind_result_[3].buffer;
+//
+//      obj.emplace_back(user);
 
       /************** 通用类型 ***************/
       // 返回值类型：泛型T
       // 返回对象不确定： 反射
-      //auto t = new T;
-      //std::cout <<  "### "  <<typeid(t).name() << std::endl;
+//      auto t = new T;
+//      std::cout <<  "### "  <<typeid(t).name() << std::endl;
+
 
 
       // 创建T的对象实例
@@ -153,6 +162,7 @@ public:
 
 
       //obj.emplace_back(std::move(*t));
+
     }
   }
 
@@ -171,7 +181,10 @@ public:
     return true;
   }
 
-  void GetMetaData() {
+
+  std::map<std::string, std::any> GetMetaData() {
+
+    std::map<std::string, std::any> mp_res;
 
     MYSQL_RES * res = mysql_stmt_result_metadata(mysql_stmt_);
     if (!res) {
@@ -186,10 +199,35 @@ public:
       fprintf(stdout, "*********************************\n");
       for(i = 0; i < num_fields; i++)
       {
-        fprintf(stdout, "Field %u is %s\n", i, fields[i].name);
+        fprintf(stdout, "Field %u is %s, %d\n", i, fields[i].name, fields[i].type);
+
+        if ( MYSQL_TYPE_LONG == fields[i].type) {
+          auto int_value = std::make_shared<int>(1);
+
+          bind_result_[i].buffer_type= MYSQL_TYPE_LONG;
+          bind_result_[i].buffer= (char *)&int_value;
+          bind_result_[i].buffer_length= 0;
+          bind_result_[i].is_null= nullptr;
+          bind_result_[i].length= 0;
+
+          mp_res[fields[i].name] = int_value;
+        } else if ( MYSQL_TYPE_VAR_STRING == fields[i].type) {
+          auto str_value = std::make_shared<char>(1024);
+
+          bind_result_[i].buffer_type= MYSQL_TYPE_STRING;
+          bind_result_[i].buffer= (char *)str_value.get();
+          bind_result_[i].buffer_length= 64;
+          bind_result_[i].is_null= nullptr;
+          bind_result_[i].length= 0;
+
+          mp_res[fields[i].name] = str_value;
+        }
+
       }
-      fprintf(stdout, "*********************************\n");
+      fprintf(stdout, "*******************%d**************\n", mp_res.size());
     }
+
+    return mp_res;
   }
 
   /*
