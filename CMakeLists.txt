@@ -22,6 +22,6 @@ add_executable(cppbatis
         connection/singleton_base.h
         prepare_stmt/prepare_stmt.h
         data_struct/user.h
-        reflection/easy_json.h data_struct/test.h)
+        reflection/easy_json.h data_struct/test.h prepare_stmt/prepare_stmt.cpp)
 
 target_link_libraries(cppbatis mysqlclient jsoncpp)

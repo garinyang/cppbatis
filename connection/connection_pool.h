@@ -57,7 +57,6 @@ public:
     return conn_list_.size();
   }
 
-
   /*
      * 获取最大链接
      *
@@ -67,9 +66,8 @@ public:
     return max_conn_;
   }
 
-
   ConnectPool(int pool_size = DEFAULT_CONN_NUM) {
-    fprintf(stdout, "Construct the connection pool, default pool size=8\n");
+    //fprintf(stdout, "Construct the connection pool, default pool size=8\n");
     InitPool(pool_size);
   }
 
@@ -77,7 +75,7 @@ protected:
 
   bool InitPool(int pool_size = DEFAULT_CONN_NUM) {
 
-    std::cout << "InitPool" << std::endl;
+    //std::cout << "InitPool" << std::endl;
 
     for (int i = 0; i < pool_size; ++i) {
 

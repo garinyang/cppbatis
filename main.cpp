@@ -19,10 +19,6 @@
 
 int main() {
 
-  // std::cout << "Hello, World!" << std::endl;
-  //     auto conn = SingletonBase<ConnectPool>::ObtainInstance();
-  //     std::cout << "max connection: " << conn.GetMaxConnNum() <<std::endl;
-
   // 获取连接池对象
   auto pool = SingletonBase<ConnectPool>::ObtainInstance();
 
@@ -36,31 +32,36 @@ int main() {
   std::stringstream ss;
   ss << "SELECT * FROM ";
   ss << " user ";
-  ss << " where age > ?";
-  std::cout << "sql1: " << ss.str() << std::endl;
+  ss << " where age > ? AND name = ?";
+  std::cout << "sql: [" << ss.str() << "]" <<std::endl;
 
   // 验证 sql
   ps->Prepare(ss.str());
 
-  // 获取结果集元信息 并 绑定 结果集
-  auto meta = ps->GetMetaData();
+  // 设置 where 条件 & 绑定
+  long limit_age = 19;
+  ps->SetInt(0, limit_age );
+  std::string name = "张三";
+  ps->SetString(1, name);
+  // 绑定参数
+  ps->BindParam();
 
-  // 设置 where 条件
-  long limit = 0;
-  ps->SetInt(0, limit);
+  // 根据 "结果集元信息" 申请绑定结果集空间；
+  auto meta = ps->ObtainMetaDataWithResBound();
 
-  // 查询 user 表
+  // 执行对应的 查询 user 表
   std::vector<User> users;
-  ps->Query(users, meta);
+  ps->Execute<User>(users, meta);
 
-  // debug
+  // 查询结果处理（打印）
   for (const auto user : users) {
     printf("## %d,%s,%s,%d ##\n", user.id, user.name.data(), user.email.data(), user.age);
   }
 
+  // 关闭prepare statement
   ps->Close();
 
-
+#if 0
   // new
   auto ps1 = std::make_unique<PrepareStatement>(conn);
 
@@ -73,11 +74,11 @@ int main() {
   ps1->Prepare(ss.str());
 
   // 获取结果集元信息 并 绑定 结果集
-  auto meta1 = ps1->GetMetaData();
+  auto meta1 = ps1->ObtainMetaDataWithResBound();
 
   // 查询test表
   std::vector<Test> tests;
-  ps1->Query(tests, meta1);
+  ps1->Execute(tests, meta1);
 
   // debug
   for (const auto test : tests) {
@@ -86,11 +87,10 @@ int main() {
 
   // 关闭
   ps1->Close();
+#endif
 
   // 释放链接
   pool.ReleaseConnection(conn);
-
-
 
   return 0;
 }

@@ -63,6 +63,13 @@ build CMakeFiles/cppbatis.dir/connection/connection.cpp.o: CXX_COMPILER__cppbati
   OBJECT_DIR = CMakeFiles/cppbatis.dir
   OBJECT_FILE_DIR = CMakeFiles/cppbatis.dir/connection
 
+build CMakeFiles/cppbatis.dir/prepare_stmt/prepare_stmt.cpp.o: CXX_COMPILER__cppbatis_Debug /Users/yangbo/workspace/code/op/cppbatis/prepare_stmt/prepare_stmt.cpp || cmake_object_order_depends_target_cppbatis
+  DEP_FILE = CMakeFiles/cppbatis.dir/prepare_stmt/prepare_stmt.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++2a
+  INCLUDES = -I/Users/yangbo/workspace/code/op/cppbatis -I/usr/local/include -I/usr/local/jsoncpp-1.9.5/include
+  OBJECT_DIR = CMakeFiles/cppbatis.dir
+  OBJECT_FILE_DIR = CMakeFiles/cppbatis.dir/prepare_stmt
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target cppbatis
@@ -71,7 +78,7 @@ build CMakeFiles/cppbatis.dir/connection/connection.cpp.o: CXX_COMPILER__cppbati
 #############################################
 # Link the executable cppbatis
 
-build cppbatis: CXX_EXECUTABLE_LINKER__cppbatis_Debug CMakeFiles/cppbatis.dir/main.cpp.o CMakeFiles/cppbatis.dir/connection/connection.cpp.o
+build cppbatis: CXX_EXECUTABLE_LINKER__cppbatis_Debug CMakeFiles/cppbatis.dir/main.cpp.o CMakeFiles/cppbatis.dir/connection/connection.cpp.o CMakeFiles/cppbatis.dir/prepare_stmt/prepare_stmt.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
   LINK_LIBRARIES = -Wl,-rpath,/usr/local/lib  -lmysqlclient  -ljsoncpp
   LINK_PATH = -L/usr/local/lib
