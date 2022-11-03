@@ -1,73 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="@172.17.0.1">
   <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.40">
-    <root id="1">
-      <DefaultCasing>exact</DefaultCasing>
-      <DefaultEngine>InnoDB</DefaultEngine>
-      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
-      <Grants>|root||root||ALTER|G
-|root||root|localhost|ALTER|G
-|root||root||ALTER ROUTINE|G
-|root||root|localhost|ALTER ROUTINE|G
-|root||root||CREATE|G
-|root||root|localhost|CREATE|G
-|root||root||CREATE ROUTINE|G
-|root||root|localhost|CREATE ROUTINE|G
-|root||root||CREATE TABLESPACE|G
-|root||root|localhost|CREATE TABLESPACE|G
-|root||root||CREATE TEMPORARY TABLES|G
-|root||root|localhost|CREATE TEMPORARY TABLES|G
-|root||root||CREATE USER|G
-|root||root|localhost|CREATE USER|G
-|root||root||CREATE VIEW|G
-|root||root|localhost|CREATE VIEW|G
-|root||root||DELETE|G
-|root||root|localhost|DELETE|G
-|root||root||DROP|G
-|root||root|localhost|DROP|G
-|root||root||EVENT|G
-|root||root|localhost|EVENT|G
-|root||root||EXECUTE|G
-|root||root|localhost|EXECUTE|G
-|root||root||FILE|G
-|root||root|localhost|FILE|G
-|root||root||INDEX|G
-|root||root|localhost|INDEX|G
-|root||root||INSERT|G
-|root||root|localhost|INSERT|G
-|root||root||LOCK TABLES|G
-|root||root|localhost|LOCK TABLES|G
-|root||root||PROCESS|G
-|root||root|localhost|PROCESS|G
-|root||root||REFERENCES|G
-|root||root|localhost|REFERENCES|G
-|root||root||RELOAD|G
-|root||root|localhost|RELOAD|G
-|root||root||REPLICATION CLIENT|G
-|root||root|localhost|REPLICATION CLIENT|G
-|root||root||REPLICATION SLAVE|G
-|root||root|localhost|REPLICATION SLAVE|G
-|root||root||SELECT|G
-|root||root|localhost|SELECT|G
-|root||root||SHOW DATABASES|G
-|root||root|localhost|SHOW DATABASES|G
-|root||root||SHOW VIEW|G
-|root||root|localhost|SHOW VIEW|G
-|root||root||SHUTDOWN|G
-|root||root|localhost|SHUTDOWN|G
-|root||mysql.session|localhost|SUPER|G
-|root||root||SUPER|G
-|root||root|localhost|SUPER|G
-|root||root||TRIGGER|G
-|root||root|localhost|TRIGGER|G
-|root||root||UPDATE|G
-|root||root|localhost|UPDATE|G
-|root||root||grant option|G
-|root||root|localhost|grant option|G
-performance_schema|schema||mysql.session|localhost|SELECT|G
-sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
-      <ServerVersion>5.7.36</ServerVersion>
-    </root>
+    <root id="1"/>
     <collation id="2" parent="1" name="armscii8_bin">
       <Charset>armscii8</Charset>
     </collation>

@@ -7,12 +7,16 @@
 #ifndef CPPBATIS_USER_H
 #define CPPBATIS_USER_H
 
+#include "reflection/easy_json.h"
+
 struct User{
   User():id(1988),name("garin"),email("garin@test.com"),age(35){}
   int id;
-  char name[16];
-  char email[128];
+  std::string name;
+  std::string email;
   int age;
+
+  JSON_HELP(id, name, email, age);
 };
 
 

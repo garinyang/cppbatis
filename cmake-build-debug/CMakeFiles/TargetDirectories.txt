@@ -1,0 +1,3 @@
+/Users/yangbo/workspace/code/op/cppbatis/cmake-build-debug/CMakeFiles/cppbatis.dir
+/Users/yangbo/workspace/code/op/cppbatis/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/yangbo/workspace/code/op/cppbatis/cmake-build-debug/CMakeFiles/rebuild_cache.dir
