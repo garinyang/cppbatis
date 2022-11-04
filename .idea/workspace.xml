@@ -15,8 +15,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11663947-c68c-4e96-9e7d-296debf485cd" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/img.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +102,7 @@
       <workItem from="1665892580744" duration="4082000" />
       <workItem from="1667005196227" duration="2951000" />
       <workItem from="1667114117241" duration="14584000" />
-      <workItem from="1667462636399" duration="25164000" />
+      <workItem from="1667462636399" duration="25286000" />
     </task>
     <servers />
   </component>

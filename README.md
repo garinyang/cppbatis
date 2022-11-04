@@ -1,4 +1,4 @@
-# CppBatis 
+# MYSQL数据库客户端框架 CppBatis 
 - A orm database structure for mysql in c++, just like mybatis for java.
 
 MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想，比如：python中的archery，java中的mybatis/plus.
