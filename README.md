@@ -1,14 +1,18 @@
-# Mysql数据库orm框架 cppbatis
-A orm database structure for mysql in c++, just like mybatis for java.
+# CppBatis 
+- A orm database structure for mysql in c++, just like mybatis for java.
+
+MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想，比如：python中的archery，java中的mybatis/plus.
+
 
 [使用说明]
 
 - 目前支持 单表查询，每个 struct 映射 一张表；（`注意：struct字段名 必须与 表中 field名称一样！！！！`）
 
 [实现说明]
+![img.png](img.png)
 1. 基于 mysql prepare-statement statement C接口封装，支持简单的连接管理； （MySQL Connector/C 8.0）
 2. 开源依赖项：
-- MySQL官方C-API: [https://dev.mysql.com/doc/c-api/8.0/en/c-api-prepared-statement-interface.html](https://dev.mysql.com/doc/c-api/8.0/en/c-api-prepared-statement-interface.html)
+- 通用性考虑，MySQL官方C-API: [https://dev.mysql.com/doc/c-api/8.0/en/c-api-prepared-statement-interface.html](https://dev.mysql.com/doc/c-api/8.0/en/c-api-prepared-statement-interface.html)
 - 静态反射：[https://github.com/yxSunRise/EasyJson.git](https://github.com/yxSunRise/EasyJson.git)
 - jsoncpp-1.9.5：[https://github.com/open-source-parsers/jsoncpp.git](https://github.com/yxSunRise/EasyJson.git)
 
