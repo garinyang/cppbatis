@@ -17,7 +17,7 @@ public:
 
   ~Connection();
 
-  MYSQL* GetMysqlInstance();
+  MYSQL& GetMysqlInstance();
 
 private:
 
@@ -26,7 +26,7 @@ private:
   std::string user;
   std::string passwd;
 
-  MYSQL* mysql_;
+  MYSQL mysql_; // mysql 连接对象
 
 };
 

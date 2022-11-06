@@ -9,7 +9,7 @@ PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):c
 
   //std::cout << "[Constructor] PrepareStatement" << std::endl;
 
-  mysql_stmt_ = mysql_stmt_init(conn_->GetMysqlInstance());
+  mysql_stmt_ = mysql_stmt_init(&conn_->GetMysqlInstance());
   if (!mysql_stmt_)
   {
     fprintf(stderr, " mysql_stmt_init(), out of memory\n");
@@ -25,18 +25,18 @@ PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):c
 
 PrepareStatement::~PrepareStatement() {
 
-  // 获取结果集中每一行包含的列数
-  int field_nums = mysql_num_fields(res_);
-
-  // 释放结果集对象
-  mysql_free_result(res_);
-
-  // 释放结果集buffer
-  for (auto i = 0; i <field_nums; ++i) {
-    if (bind_result_[i].buffer != nullptr) {
-      free(bind_result_[i].buffer);
-      bind_result_[i].buffer = nullptr;
+  if (res_) {
+    // 获取结果集中每一行包含的列数
+    int field_nums = mysql_num_fields(res_);
+    for (auto i = 0; i < field_nums; ++i) {
+      if (bind_result_[i].buffer != nullptr) {
+        free(bind_result_[i].buffer);
+        bind_result_[i].buffer = nullptr;
+      }
     }
+
+    // 释放结果集对象
+    mysql_free_result(res_);
   }
 };
 
@@ -70,68 +70,6 @@ void PrepareStatement::SetString(int index, std::string& value) {
   bind_param_[index].buffer_length= value.size();
 }
 
-//template <class T>
-//void PrepareStatement::Execute(std::vector<T>& obj, std::map<std::string, std::pair<int, std::any>>& res) {
-//
-//  if (!mysql_stmt_) {
-//    fprintf(stderr, " please init prepare statement firstly.\n");
-//    return;
-//  }
-//
-//  // 1. 执行
-//  if (mysql_stmt_execute(mysql_stmt_))
-//  {
-//    fprintf(stderr, " mysql_stmt_execute(), 1 failed\n");
-//    fprintf(stderr, " %s\n", mysql_stmt_error(mysql_stmt_));
-//    fprintf(stderr, " %s\n", mysql_error(conn_->GetMysqlInstance()));
-//    return;
-//  }
-//
-//  // 获取结果
-//  int status = 0;
-//  while (true)
-//  {
-//    // fetch each col
-//    status = mysql_stmt_fetch(mysql_stmt_);
-//    //fprintf(stdout, "mysql_stmt_fetch, status:%d\n", status);
-//    if (status == 1 || status == MYSQL_NO_DATA) {
-//      //fprintf(stdout, "### MYSQL_NO_DATA ###\n");
-//      break;
-//    }
-//
-//    // 结果集拼装成json对象
-//    Json::Value jres;
-//    for (auto it = res.begin(); it != res.end(); ++it) {
-//
-//      // 分拣处理不同类型
-//      if (MYSQL_TYPE_LONG == it->second.first) {
-//        //std::cout << it->first << ":" << *std::any_cast<int64_t *>(it->second.second)<< " ";
-//        jres[it->first] = int(*std::any_cast<int64_t *>(it->second.second)); // 精度丢失
-//
-//
-//      } else if (MYSQL_TYPE_VAR_STRING == it->second.first) {
-//        //std::cout << it->first << ":" <<std::any_cast<std::shared_ptr<char>>(it->second.second) << " ";
-//        //std::cout << it->first << ":" <<std::any_cast<char*>(it->second.second) << " ";
-//        jres[it->first] = (std::string)std::any_cast<char*>(it->second.second);
-//
-//      }  else if (MYSQL_TYPE_TIMESTAMP2 == it->second.first){
-//        //std::cout << it->first << ":" << *std::any_cast<int64_t *>(it->second.second) <<std::endl;
-//        jres[it->first] = (int)*std::any_cast<int64_t *>(it->second.second);
-//      }
-//    }
-//    //std::cout << std::endl;
-//
-//    /************** 通用类型 ***************/
-//    // 返回值类型：泛型T
-//    // 返回对象不确定： 反射
-//    T t;
-//    t.unmarshal(jres);
-//
-//    // 添加到结果集
-//    obj.emplace_back(std::move(t));
-//  }
-//}
-
 std::map<std::string, std::pair<int, std::any>> PrepareStatement::ObtainMetaDataWithResBound() {
 
   std::map<std::string, std::pair<int, std::any>> mp_res;
@@ -147,6 +85,61 @@ std::map<std::string, std::pair<int, std::any>> PrepareStatement::ObtainMetaData
     num_fields = mysql_num_fields(res_);
     fields = mysql_fetch_fields(res_);
 
+    for (i = 0; i < num_fields; i++) {
+      // fprintf(stdout, "Field %u is %s, %d\n", i, fields[i].name, fields[i].type);
+
+      if (MYSQL_TYPE_LONG == fields[i].type) {
+        auto int_value = (int64_t*)malloc(sizeof(int64_t));
+        memset(int_value, 0x0, sizeof(int64_t));
+
+        bind_result_[i].buffer_type   = MYSQL_TYPE_LONG;
+        bind_result_[i].buffer        = int_value;
+        bind_result_[i].buffer_length = 0;
+        bind_result_[i].is_null       = nullptr;
+        bind_result_[i].length        = 0;
+
+        mp_res[fields[i].name] = std::make_pair(MYSQL_TYPE_LONG, int_value);
+      } else if (MYSQL_TYPE_VAR_STRING == fields[i].type or MYSQL_TYPE_DATETIME == fields[i].type) {
+        //          auto str_value = std::make_shared<char>(1024);
+        // auto str_value = (char*)malloc(fields[i].max_length+1);
+        auto str_value = (char*)malloc(fields[i].length + 1);
+        //          std::cout << "malloc: " << fields[i].length << std::endl;
+        memset(str_value, 0x0, fields[i].max_length + 1);
+
+        bind_result_[i].buffer_type   = MYSQL_TYPE_STRING;
+        bind_result_[i].buffer        = str_value;
+        bind_result_[i].buffer_length = fields[i].length + 1;
+        bind_result_[i].is_null       = nullptr;
+        bind_result_[i].length        = 0;
+
+        mp_res[fields[i].name] = std::make_pair(MYSQL_TYPE_VAR_STRING, str_value);
+      } else if (MYSQL_TYPE_TIMESTAMP2 == fields[i].type or MYSQL_TYPE_LONGLONG == fields[i].type) {
+        // 列为 时间戳（long long）
+        auto longlong_value = (int64_t*)malloc(sizeof(int64_t));
+        memset(longlong_value, 0x0, sizeof(int64_t));
+
+        bind_result_[i].buffer_type   = MYSQL_TYPE_LONGLONG;
+        bind_result_[i].buffer        = longlong_value;
+        bind_result_[i].buffer_length = 0;
+        bind_result_[i].is_null       = nullptr;
+        bind_result_[i].length        = 0;
+
+        mp_res[fields[i].name] = std::make_pair(MYSQL_TYPE_TIMESTAMP2, longlong_value);
+      } else if (MYSQL_TYPE_DOUBLE == fields[i].type or MYSQL_TYPE_FLOAT == fields[i].type) {
+        // fprintf(stderr, "[LOOK] UNHANDLED TYPE:%d\n", (int)fields[i].type);
+        auto double_value = (double*)malloc(sizeof(double));
+        memset(double_value, 0x0, sizeof(double));
+
+        bind_result_[i].buffer_type   = MYSQL_TYPE_DOUBLE;
+        bind_result_[i].buffer        = double_value;
+        bind_result_[i].buffer_length = 0;
+        bind_result_[i].is_null       = nullptr;
+        bind_result_[i].length        = 0;
+
+        mp_res[fields[i].name] = std::make_pair(MYSQL_TYPE_DOUBLE, double_value);
+      }
+    }
+    /*
     for(i = 0; i < num_fields; i++)
     {
       // fprintf(stdout, "Field %u is %s, %d\n", i, fields[i].name, fields[i].type);
@@ -190,7 +183,7 @@ std::map<std::string, std::pair<int, std::any>> PrepareStatement::ObtainMetaData
 
         mp_res[fields[i].name] = std::make_pair(MYSQL_TYPE_TIMESTAMP2, ts);
       }
-    }
+    }*/
   }
 
   // 绑定结果集
@@ -226,12 +219,16 @@ void PrepareStatement::BindParam() {
 
 void PrepareStatement::Close() {
 
+  if (nullptr == mysql_stmt_) {
+    return ;
+  }
+
   if (mysql_stmt_close(mysql_stmt_))
   {
     /* mysql_stmt_close() invalidates stmt, so call          */
     /* mysql_error(mysql) rather than mysql_stmt_error(stmt) */
     fprintf(stderr, " failed while closing the statement\n");
-    fprintf(stderr, " %s\n", mysql_error(conn_->GetMysqlInstance()));
+    fprintf(stderr, " %s\n", mysql_error(&conn_->GetMysqlInstance()));
     return ;
   }
 }

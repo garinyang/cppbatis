@@ -14,8 +14,6 @@
 #include "data_struct/test.h"
 #include <mysql/mysql.h>
 #include <memory>
-#include <string.h>
-#include <sstream>
 
 int main() {
 
@@ -39,10 +37,10 @@ int main() {
   ps->Prepare(ss.str());
 
   // 设置 where 条件 & 绑定
-  long limit_age = 19;
+  long limit_age = 16;
   ps->SetInt(0, limit_age );
   std::string name = "张三";
-  ps->SetString(1, name);
+  //ps->SetString(1, name);
   // 绑定参数
   ps->BindParam();
 
@@ -56,6 +54,13 @@ int main() {
   // 查询结果处理（打印）
   for (const auto user : users) {
     printf("## %d,%s,%s,%d ##\n", user.id, user.name.data(), user.email.data(), user.age);
+
+    // easy_json 目前对于中文支持有点问题
+//    Json::FastWriter fw;
+//    Json::Value js_user;
+//    user.marshal(js_user);
+//    auto u = fw.write(js_user);
+//    printf("-> %s", u.c_str());
   }
 
   // 关闭prepare statement
