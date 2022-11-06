@@ -15,7 +15,8 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -30,7 +31,8 @@
 					"name" : "cppbatis",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -39,8 +41,15 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "cppbatis::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-cppbatis-Debug-6ff8c2ab6d3e7ba39a9d.json",
+					"jsonFile" : "target-cppbatis-Debug-916314a946fca9078273.json",
 					"name" : "cppbatis",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "cppbatis_test::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cppbatis_test-Debug-508d8b05a453b5a6b23e.json",
+					"name" : "cppbatis_test",
 					"projectIndex" : 0
 				}
 			]

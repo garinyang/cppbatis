@@ -41,7 +41,7 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = /Users/yangbo/workspace/code/op/cppbatis/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target cppbatis
+# Object build statements for STATIC_LIBRARY target cppbatis
 
 
 #############################################
@@ -49,44 +49,70 @@ cmake_ninja_workdir = /Users/yangbo/workspace/code/op/cppbatis/cmake-build-debug
 
 build cmake_object_order_depends_target_cppbatis: phony || CMakeFiles/cppbatis.dir
 
-build CMakeFiles/cppbatis.dir/main.cpp.o: CXX_COMPILER__cppbatis_Debug /Users/yangbo/workspace/code/op/cppbatis/main.cpp || cmake_object_order_depends_target_cppbatis
-  DEP_FILE = CMakeFiles/cppbatis.dir/main.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++2a
-  INCLUDES = -I/Users/yangbo/workspace/code/op/cppbatis -I/usr/local/include -I/usr/local/jsoncpp-1.9.5/include
-  OBJECT_DIR = CMakeFiles/cppbatis.dir
-  OBJECT_FILE_DIR = CMakeFiles/cppbatis.dir
-
 build CMakeFiles/cppbatis.dir/connection/connection.cpp.o: CXX_COMPILER__cppbatis_Debug /Users/yangbo/workspace/code/op/cppbatis/connection/connection.cpp || cmake_object_order_depends_target_cppbatis
   DEP_FILE = CMakeFiles/cppbatis.dir/connection/connection.cpp.o.d
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++2a
-  INCLUDES = -I/Users/yangbo/workspace/code/op/cppbatis -I/usr/local/include -I/usr/local/jsoncpp-1.9.5/include
+  INCLUDES = -I/Users/yangbo/workspace/code/op/cppbatis -I/usr/local/include -I/usr/local/jsoncpp-1.9.5/include -I/Users/yangbo/workspace/code/op/cppbatis/connection -I/Users/yangbo/workspace/code/op/cppbatis/data_struct -I/Users/yangbo/workspace/code/op/cppbatis/prepare_stmt -I/Users/yangbo/workspace/code/op/cppbatis/reflection
   OBJECT_DIR = CMakeFiles/cppbatis.dir
   OBJECT_FILE_DIR = CMakeFiles/cppbatis.dir/connection
 
 build CMakeFiles/cppbatis.dir/prepare_stmt/prepare_stmt.cpp.o: CXX_COMPILER__cppbatis_Debug /Users/yangbo/workspace/code/op/cppbatis/prepare_stmt/prepare_stmt.cpp || cmake_object_order_depends_target_cppbatis
   DEP_FILE = CMakeFiles/cppbatis.dir/prepare_stmt/prepare_stmt.cpp.o.d
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++2a
-  INCLUDES = -I/Users/yangbo/workspace/code/op/cppbatis -I/usr/local/include -I/usr/local/jsoncpp-1.9.5/include
+  INCLUDES = -I/Users/yangbo/workspace/code/op/cppbatis -I/usr/local/include -I/usr/local/jsoncpp-1.9.5/include -I/Users/yangbo/workspace/code/op/cppbatis/connection -I/Users/yangbo/workspace/code/op/cppbatis/data_struct -I/Users/yangbo/workspace/code/op/cppbatis/prepare_stmt -I/Users/yangbo/workspace/code/op/cppbatis/reflection
   OBJECT_DIR = CMakeFiles/cppbatis.dir
   OBJECT_FILE_DIR = CMakeFiles/cppbatis.dir/prepare_stmt
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target cppbatis
+# Link build statements for STATIC_LIBRARY target cppbatis
 
 
 #############################################
-# Link the executable cppbatis
+# Link the static library libcppbatis.a
 
-build cppbatis: CXX_EXECUTABLE_LINKER__cppbatis_Debug CMakeFiles/cppbatis.dir/main.cpp.o CMakeFiles/cppbatis.dir/connection/connection.cpp.o CMakeFiles/cppbatis.dir/prepare_stmt/prepare_stmt.cpp.o
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
-  LINK_LIBRARIES = -Wl,-rpath,/usr/local/lib  -lmysqlclient  -ljsoncpp
-  LINK_PATH = -L/usr/local/lib
+build libcppbatis.a: CXX_STATIC_LIBRARY_LINKER__cppbatis_Debug CMakeFiles/cppbatis.dir/connection/connection.cpp.o CMakeFiles/cppbatis.dir/prepare_stmt/prepare_stmt.cpp.o
+  ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
+  LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles/cppbatis.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = cppbatis
-  TARGET_PDB = cppbatis.dbg
+  TARGET_FILE = libcppbatis.a
+  TARGET_PDB = cppbatis.a.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target cppbatis_test
+
+
+#############################################
+# Order-only phony target for cppbatis_test
+
+build cmake_object_order_depends_target_cppbatis_test: phony || cmake_object_order_depends_target_cppbatis
+
+build CMakeFiles/cppbatis_test.dir/main.cpp.o: CXX_COMPILER__cppbatis_test_Debug /Users/yangbo/workspace/code/op/cppbatis/main.cpp || cmake_object_order_depends_target_cppbatis_test
+  DEP_FILE = CMakeFiles/cppbatis_test.dir/main.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++2a
+  INCLUDES = -I/Users/yangbo/workspace/code/op/cppbatis -I/usr/local/include -I/usr/local/jsoncpp-1.9.5/include -I/Users/yangbo/workspace/code/op/cppbatis/connection -I/Users/yangbo/workspace/code/op/cppbatis/data_struct -I/Users/yangbo/workspace/code/op/cppbatis/prepare_stmt -I/Users/yangbo/workspace/code/op/cppbatis/reflection
+  OBJECT_DIR = CMakeFiles/cppbatis_test.dir
+  OBJECT_FILE_DIR = CMakeFiles/cppbatis_test.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target cppbatis_test
+
+
+#############################################
+# Link the executable cppbatis_test
+
+build cppbatis_test: CXX_EXECUTABLE_LINKER__cppbatis_test_Debug CMakeFiles/cppbatis_test.dir/main.cpp.o | libcppbatis.a || libcppbatis.a
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
+  LINK_LIBRARIES = -Wl,-rpath,/usr/local/lib  libcppbatis.a  -lmysqlclient  -ljsoncpp
+  LINK_PATH = -L/usr/local/lib
+  OBJECT_DIR = CMakeFiles/cppbatis_test.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = cppbatis_test
+  TARGET_PDB = cppbatis_test.dbg
 
 
 #############################################
@@ -114,6 +140,8 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
+build cppbatis: phony libcppbatis.a
+
 # =============================================================================
 # Folder targets.
 
@@ -122,7 +150,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /Users/yangbo/workspace/code/op/cppbatis/cmake-build-debug
 
-build all: phony cppbatis
+build all: phony libcppbatis.a cppbatis_test
 
 # =============================================================================
 # Built-in targets

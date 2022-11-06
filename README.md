@@ -2,7 +2,7 @@
 - A orm database structure for mysql in c++, just like mybatis for java.
 
 MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想，比如：python中的archery，java中的mybatis/plus.
-
+应该算是所有通用实现里，代码最为简洁的一版；（该项目构建与MacOS环境，在linux环境下，cmake可能是否做些许调整；）
 
 [使用说明]
 

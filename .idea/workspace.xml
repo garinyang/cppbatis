@@ -5,6 +5,7 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
+      <config projectName="cppbatis" targetName="cppbatis_test" />
       <config projectName="cppbatis" targetName="cppbatis" />
     </generated>
   </component>
@@ -16,14 +17,17 @@
   <component name="ChangeListManager">
     <list default="true" id="11663947-c68c-4e96-9e7d-296debf485cd" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-978bef75a90abb837539.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2022-11-03T13-53-48-0402.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-cppbatis-Debug-6ff8c2ab6d3e7ba39a9d.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/rules.ninja" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connection/connection.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/connection/connection.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connection/connection.h" beforeDir="false" afterPath="$PROJECT_DIR$/connection/connection.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_stmt/prepare_stmt.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_stmt/prepare_stmt.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_stmt/prepare_stmt.h" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_stmt/prepare_stmt.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/build.ninja" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +89,7 @@
       <recent name="$PROJECT_DIR$/3rd_party" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="CMake 应用程序.cppbatis_test">
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -96,6 +100,15 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="cppbatis_test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="cppbatis" TARGET_NAME="cppbatis_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="cppbatis" RUN_TARGET_NAME="cppbatis_test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake 应用程序.cppbatis" />
+      <item itemvalue="CMake 应用程序.cppbatis_test" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -110,7 +123,7 @@
       <workItem from="1665892580744" duration="4082000" />
       <workItem from="1667005196227" duration="2951000" />
       <workItem from="1667114117241" duration="14584000" />
-      <workItem from="1667462636399" duration="29764000" />
+      <workItem from="1667462636399" duration="30842000" />
     </task>
     <servers />
   </component>
