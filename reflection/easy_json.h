@@ -70,6 +70,14 @@ inline bool Unmarshal(uint32_t& obj, const Json::Value& root) {
 }
 
 template <int = 0>
+inline bool Unmarshal(int64_t& obj, const Json::Value& root) {
+  if (!root.isIntegral())
+    return false;
+  obj = root.asInt64();
+  return true;
+}
+
+template <int = 0>
 inline bool Unmarshal(uint64_t& obj, const Json::Value& root) {
   if (!root.isIntegral())
     return false;

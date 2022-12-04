@@ -11,12 +11,12 @@
 
 struct User{
   User():id(1988),name("garin"),email("garin@test.com"),age(35){}
-  int id;
+  int32_t id;
   std::string name;
   std::string email;
-  int age;
-
-  JSON_HELP(id, name, email, age);
+  int64_t age;
+  std::string ttt;
+  JSON_HELP(id, name, email, age, ttt);
 };
 
 
