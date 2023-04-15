@@ -1,3 +1,4 @@
+
 /*
  * desc: 数据库连接池封装.
  * author: garin.yang
@@ -12,7 +13,7 @@
 #include <memory>
 
 #include "singleton_base.h"
-#include "connection.h"
+#include "connection/connection.h"
 
 #define MAX_CONN_NUM 16
 #define DEFAULT_CONN_NUM 8
@@ -31,7 +32,7 @@ public:
       return nullptr;
     }
 
-    auto& conn = conn_list_.front();
+    auto conn = conn_list_.front();
     conn_list_.pop_front();
 
     return conn;

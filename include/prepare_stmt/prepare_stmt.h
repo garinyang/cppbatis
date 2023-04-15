@@ -63,7 +63,8 @@ public:
   /*
      * 查询 & 更新
      * */
-  //template <class T> void Execute(std::vector<T>& obj, std::map<std::string, std::pair<int, std::any>>& res);
+  // std::map<std::string, std::pair<int, std::any>>
+
   template <class T> void Execute(std::vector<T>& obj, std::map<std::string, std::pair<int, std::any>>& res) {
 
     if (!mysql_stmt_) {
@@ -74,9 +75,8 @@ public:
     // 1. 执行
     if (mysql_stmt_execute(mysql_stmt_))
     {
-      fprintf(stderr, " mysql_stmt_execute(), 1 failed\n");
       fprintf(stderr, " %s\n", mysql_stmt_error(mysql_stmt_));
-      fprintf(stderr, " %s\n", mysql_error(&conn_->GetMysqlInstance()));
+      fprintf(stderr, " %s\n", mysql_error(conn_->GetMysqlInstance()));
       return;
     }
 
@@ -100,6 +100,9 @@ public:
         if (MYSQL_TYPE_LONG == it->second.first) {
            //std::cout << it->first << ":" << *std::any_cast<int64_t *>(it->second.second)<< " ";
           jres[it->first] = int(*std::any_cast<int64_t*>(it->second.second));  // 精度丢失
+          
+          // 清空当前缓存值
+          memset(std::any_cast<int64_t*>(it->second.second), 0, sizeof(int64_t));
 
         } else if (MYSQL_TYPE_VAR_STRING == it->second.first
                    or MYSQL_TYPE_DATETIME == it->second.first
@@ -108,12 +111,21 @@ public:
            //std::cout << it->first << ":" <<std::any_cast<char*>(it->second.second) << " ";
           jres[it->first] = (std::string)std::any_cast<char*>(it->second.second);
 
+          // 清空当前缓存值
+          memset(std::any_cast<char*>(it->second.second), 0, strlen(std::any_cast<char*>(it->second.second)));
+
         } else if (MYSQL_TYPE_TIMESTAMP2 == it->second.first or MYSQL_TYPE_LONGLONG == it->second.first) {
            //std::cout << it->first << ":" << *std::any_cast<int64_t *>(it->second.second) <<std::endl;
           jres[it->first] = (int32_t)*std::any_cast<int64_t*>(it->second.second);
+
+          // 清空当前缓存值
+          memset(std::any_cast<int64_t*>(it->second.second), 0, sizeof(int64_t));
         } else if (MYSQL_TYPE_DOUBLE == it->second.first or MYSQL_TYPE_FLOAT == it->second.first) {
           //std::cout << it->first << ":" << *std::any_cast<double*>(it->second.second) << std::endl;
           jres[it->first] = (double)*std::any_cast<double*>(it->second.second);
+
+          // 清空当前缓存值
+          memset(std::any_cast<double*>(it->second.second), 0, sizeof(double));
         } else {
           std::cout << "[LOOK] unhandled type:" << it->second.first << std::endl;
         }

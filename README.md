@@ -1,3 +1,11 @@
+<!--
+ * @Author: garin.yang garin.yang@outlook.com
+ * @Date: 2023-04-15 21:27:28
+ * @LastEditors: garin.yang garin.yang@outlook.com
+ * @LastEditTime: 2023-04-15 22:59:50
+ * @FilePath: /cppbatis/README.md
+ * @Description: 
+-->
 # MYSQL数据库客户端框架 CppBatis 
 - A orm database structure for mysql in c++, just like mybatis for java.
 
@@ -7,6 +15,17 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 [使用说明]
 
 - 目前支持 单表查询，每个 struct 映射 一张表；（`注意：struct字段名 必须与 表中 field名称一样！！！！`）
+
+[编译]
+- cd cppbatis && mkdir build
+- cd build && cmake ..
+- make
+
+生成
+-libcppbatis.a // 数据库框架静态库
+-cppbatis_test // 测试程序
+
+注意：测试用例，需要构建对应的库，表及字段（同struct_data中保持一致）！！！！
 
 [实现说明]
 ![img.png](img.png)

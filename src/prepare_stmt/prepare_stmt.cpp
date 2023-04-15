@@ -3,13 +3,17 @@
  * author: garin.yang
  * date: 2022/11/3
  */
-#include "prepare_stmt.h"
+#include "prepare_stmt/prepare_stmt.h"
 
 PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):conn_(conn_ptr) {
-
   //std::cout << "[Constructor] PrepareStatement" << std::endl;
+  if (nullptr == conn_ptr) {
+    fprintf(stderr, "invalid connection handle!!!");
+    return ;
+  }
 
-  mysql_stmt_ = mysql_stmt_init(&conn_->GetMysqlInstance());
+  // 初始化 mysql_stmt 对象
+  mysql_stmt_ = mysql_stmt_init(conn_->GetMysqlInstance());
   if (!mysql_stmt_)
   {
     fprintf(stderr, " mysql_stmt_init(), out of memory\n");
@@ -45,7 +49,7 @@ PrepareStatement::~PrepareStatement() {
         /* mysql_stmt_close() invalidates stmt, so call          */
         /* mysql_error(mysql) rather than mysql_stmt_error(stmt) */
         fprintf(stderr, " failed while closing the statement\n");
-        fprintf(stderr, " %s\n", mysql_error(&conn_->GetMysqlInstance()));
+        fprintf(stderr, " %s\n", mysql_error(conn_->GetMysqlInstance()));
         return ;
       }
     }
@@ -89,10 +93,12 @@ void PrepareStatement::SetString(int index, std::string& value) {
   bind_param_[index].buffer_length= value.size();
 }
 
+// 
 std::map<std::string, std::pair<int, std::any>> PrepareStatement::ObtainMetaDataWithResBound() {
 
   std::map<std::string, std::pair<int, std::any>> mp_res;
 
+  // 获取结果集元数据
   res_ = mysql_stmt_result_metadata(mysql_stmt_);
   if (!res_) {
 

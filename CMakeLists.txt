@@ -13,12 +13,13 @@ message("###${CMAKE_SOURCE_DIR}")
 link_directories(/usr/local/lib)
 
 #头文件
-include_directories(connection data_struct prepare_stmt reflection)
+#include_directories(connection data_struct prepare_stmt reflection)
+include_directories(include)
 
 # 生成动态库
 add_library(${PROJECT_NAME}
-        connection/connection.cpp
-        prepare_stmt/prepare_stmt.cpp)
+        src/connection/connection.cpp
+        src/prepare_stmt/prepare_stmt.cpp)
 
 # 生成测试可执行文件
 add_executable(${PROJECT_NAME}_test
