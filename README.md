@@ -8,16 +8,17 @@
 -->
 
 # MYSQL数据库客户端框架 CppBatis 
+
+[简介]
 - A orm database structure for mysql in c++, just like mybatis for java.
 MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想，比如：python中的archery，java中的mybatis/plus.
 应该算是所有通用实现里，代码最为简洁的一版；（该项目构建与MacOS环境，在linux环境下，cmake可能是否做些许调整；）
 
-[目的]
+[开发目的]
 - C++查询mysql数据库中的行记录，不需要再关心 field有多少个，是第几列，查询结果被封装在一个struct对象中，访问
 数据库列的值，转变为访问对象中的成员，极大提升了C++数据库开发效率；
 
 [使用说明]
-
 - 目前支持单表查询，每个 struct 映射 一张表，将所有行记录映射为一个个struct对象；
 （`注意：struct字段名 必须与 表中 field名称一样！！！！`）
 
