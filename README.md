@@ -18,7 +18,8 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 
 [使用说明]
 
-- 目前支持单表查询，每个 struct 映射 一张表，将所有行记录映射为一个个struct对象；（`注意：struct字段名 必须与 表中 field名称一样！！！！`）
+- 目前支持单表查询，每个 struct 映射 一张表，将所有行记录映射为一个个struct对象；
+（`注意：struct字段名 必须与 表中 field名称一样！！！！`）
 
 [编译]
 - cd cppbatis && mkdir build
