@@ -23,33 +23,31 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 ```
   // 获取连接池对象
   auto pool = SingletonBase<ConnectPool>::ObtainInstance();
-
+  
   // 获取mysql连接对象
   auto conn = pool.GetConnection();
-
+  
   // 创建一个ps对象
   auto ps = std::make_unique<PrepareStatement>(conn);
-
+  
   // 拼装 sql
   std::stringstream ss;
   ss << "SELECT * FROM ";
   ss << " user ";
   ss << " where age in (?, ?)";
   std::cout << "sql: [" << ss.str() << "]" <<std::endl;
-
+  
   // 验证 sql
   ps->Prepare(ss.str());
-
+  
   // 设置 where 条件 & 绑定
   int32_t limit_age = 1998;
   ps->SetInt32(0, limit_age);
-  //std::string name = "张三";
-  //ps->SetString(1, name);
   int64_t age1 = 2120202022;
   ps->SetInt64(1, age1);
+  
   // 绑定参数
   ps->BindParam();
-
   // 根据 "结果集元信息" 申请绑定结果集空间；
   auto meta = ps->ObtainMetaDataWithResBound();
 
@@ -73,10 +71,10 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 - make
 
 生成
-- *libcppbatis.a // 数据库框架静态库 *
-- *cppbatis_test // 测试程序*
+- **libcppbatis.a // 数据库框架静态库 **
+- **cppbatis_test // 测试程序**
 
-*注意：测试用例，需要构建对应的库，表及字段（同struct_data中保持一致）！！！*
+**注意：测试用例，需要构建对应的库，表及字段（同struct_data中保持一致）！！！**
 
 [实现说明]
 ![img.png](img.png)
@@ -87,8 +85,8 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 - jsoncpp-1.9.5：[https://github.com/open-source-parsers/jsoncpp.git](https://github.com/yxSunRise/EasyJson.git)
 
 [计划]
-* 第一步：[已完成] 基础preparestatement C接口封装一个简单的msyql连接客户端，支持简单的 "更新"，"查询"；
-* 第二步：[已完成] 结合模板，改造"更新"&"查询"功能，实现"通用"的数据结构查询&更新功能；[已支持 "查询]
+* 第一步：[~~已完成~~] 基础preparestatement C接口封装一个简单的msyql连接客户端，支持简单的 "更新"，"查询"；
+* 第二步：[~~已完成~~] 结合模板，改造"更新"&"查询"功能，实现"通用"的数据结构查询&更新功能；
 * 第三步：[待完成] 支持事务，联合查询，超时重连等；
 
 
