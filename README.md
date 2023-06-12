@@ -15,8 +15,53 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 应该算是所有通用实现里，代码最为简洁的一版；（该项目构建与MacOS环境，在linux环境下，cmake可能是否做些许调整；）
 
 [开发目的]
-- C++查询mysql数据库中的行记录，不需要再关心 field有多少个，是第几列，查询结果被封装在一个struct对象中，访问
-数据库列的值，转变为访问对象中的成员，极大提升了C++数据库开发效率；
+- C++查询mysql数据库中的行记录，不需要再关心field有多少个，是第几列，查询结果是一个二维数组，通过数组索引便利。
+- 只需定义个结构体对象，查询结果被封装在一个struct对象中，访问数据库列的值，转变为访问对象中的成员，非常方便，极大提升了C++数据库开发效率；
+
+使用方式非常简单，如下：（连接池甚至可以不用）
+
+(```)
+  // 获取连接池对象
+  auto pool = SingletonBase<ConnectPool>::ObtainInstance();
+
+  // 获取mysql连接对象
+  auto conn = pool.GetConnection();
+
+  // 创建一个ps对象
+  auto ps = std::make_unique<PrepareStatement>(conn);
+
+  // 拼装 sql
+  std::stringstream ss;
+  ss << "SELECT * FROM ";
+  ss << " user ";
+  ss << " where age in (?, ?)";
+  std::cout << "sql: [" << ss.str() << "]" <<std::endl;
+
+  // 验证 sql
+  ps->Prepare(ss.str());
+
+  // 设置 where 条件 & 绑定
+  int32_t limit_age = 1998;
+  ps->SetInt32(0, limit_age);
+  //std::string name = "张三";
+  //ps->SetString(1, name);
+  int64_t age1 = 2120202022;
+  ps->SetInt64(1, age1);
+  // 绑定参数
+  ps->BindParam();
+
+  // 根据 "结果集元信息" 申请绑定结果集空间；
+  auto meta = ps->ObtainMetaDataWithResBound();
+
+  // 执行对应的 查询 user 表
+  std::vector<User> users;
+  ps->Execute(users, meta);
+
+  // 查询结果处理（打印）
+  for (const auto user : users) {
+    printf("#1# %d, %s, %s, %lld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
+  }
+(```)
 
 [使用说明]
 - 目前支持单表查询，每个 struct 映射 一张表，将所有行记录映射为一个个struct对象；
