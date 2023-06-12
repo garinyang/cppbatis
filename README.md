@@ -73,10 +73,10 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 - make
 
 生成
-- #libcppbatis.a // 数据库框架静态库
-- #cppbatis_test // 测试程序
+# - libcppbatis.a // 数据库框架静态库
+# - #cppbatis_test // 测试程序
 
-注意：测试用例，需要构建对应的库，表及字段（同struct_data中保持一致）！！！！
+# 注意：测试用例，需要构建对应的库，表及字段（同struct_data中保持一致）！！！！
 
 [实现说明]
 ![img.png](img.png)
