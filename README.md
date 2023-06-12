@@ -20,7 +20,7 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
 
 使用方式非常简单，如下：（连接池甚至可以不用）
 
-`
+```)
   // 获取连接池对象
   auto pool = SingletonBase<ConnectPool>::ObtainInstance();
 
@@ -61,7 +61,7 @@ MYSQL数据库客户端orm框架，思路参考的是高级语言中的orm思想
   for (const auto user : users) {
     printf("#1# %d, %s, %s, %lld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
   }
-`
+(```
 
 [使用说明]
 - 目前支持单表查询，每个 struct 映射 一张表，将所有行记录映射为一个个struct对象；
