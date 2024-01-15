@@ -46,9 +46,8 @@ Connection::Connection() {
 }
 
 Connection::~Connection() {
-
   // std::cout << "Connection::~Connection" << std::endl;
-    mysql_close(mysql_);
+  mysql_close(mysql_);
 }
 
 

@@ -5,12 +5,19 @@
  */
 #include "prepare_stmt/prepare_stmt.h"
 
-PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):conn_(conn_ptr) {
+PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):conn_(conn_ptr), res_(nullptr) {
   //std::cout << "[Constructor] PrepareStatement" << std::endl;
   if (nullptr == conn_ptr) {
     fprintf(stderr, "invalid connection handle!!!");
     return ;
   }
+
+  // 设置字符集为UTF-8
+  // if (mysql_set_character_set(conn_->GetMysqlInstance(), "utf8") != 0) {
+  //     std::cerr << "无法设置字符集: " << mysql_error(conn_->GetMysqlInstance()) << std::endl;
+  // } else {
+  //     std::cout << "已成功设置字符集为UTF-8！" << std::endl;
+  // }
 
   // 初始化 mysql_stmt 对象
   mysql_stmt_ = mysql_stmt_init(conn_->GetMysqlInstance());
@@ -30,6 +37,7 @@ PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):c
 PrepareStatement::~PrepareStatement() {
 
   if (res_) {
+
     // 获取结果集中每一行包含的列数
     int field_nums = mysql_num_fields(res_);
     for (auto i = 0; i < field_nums; ++i) {
@@ -54,10 +62,12 @@ PrepareStatement::~PrepareStatement() {
       }
     }
   }
+
 };
 
 void PrepareStatement::Prepare(std::string sql) {
 
+  // std::cout << "sql:" << sql.c_str() << ", len:" << sql.length() << std::endl;
   if (mysql_stmt_prepare(mysql_stmt_, sql.c_str(), sql.length()))
   {
     fprintf(stderr, " mysql_stmt_prepare(), INSERT failed\n");
@@ -71,7 +81,6 @@ void PrepareStatement::SetInt32(int index, int32_t& value) {
   bind_param_[index].buffer_type = MYSQL_TYPE_LONG;
   bind_param_[index].buffer = &value;
   bind_param_[index].is_null = 0;
-  unsigned long len = sizeof(long);
   bind_param_[index].length = 0;
 
 }
@@ -81,16 +90,20 @@ void PrepareStatement::SetInt64(int index, int64_t & value) {
   bind_param_[index].buffer_type = MYSQL_TYPE_LONGLONG;
   bind_param_[index].buffer = &value;
   bind_param_[index].is_null = 0;
-  unsigned long len = sizeof(long long);
   bind_param_[index].length = 0;
 
 }
 
 void PrepareStatement::SetString(int index, std::string& value) {
 
+  auto nameLen = value.length();
+
   bind_param_[index].buffer_type = MYSQL_TYPE_STRING;
   bind_param_[index].buffer= (char*)value.c_str();
   bind_param_[index].buffer_length= value.size();
+
+  bind_param_[index].buffer_length= nameLen;
+  bind_param_[index].is_null = 0;
 }
 
 // 
@@ -179,11 +192,11 @@ std::map<std::string, std::pair<int, std::any>> PrepareStatement::ObtainMetaData
   return mp_res;
 }
 
-[[maybe_unused]] int PrepareStatement::GetAffactedRows() {
+int PrepareStatement::GetAffactedRows() {
   int affected_rows = 0;
   affected_rows = mysql_stmt_affected_rows(mysql_stmt_);
-  fprintf(stdout, " total affected rows(insert 1): %lu\n",
-          (unsigned long) affected_rows);
+  // fprintf(stdout, " total affected rows(insert 1): %lu\n",
+  //         (unsigned long) affected_rows);
 
   return affected_rows;
 }
@@ -193,11 +206,12 @@ void PrepareStatement::BindParam() {
   {
     fprintf(stderr, " mysql_stmt_bind_param() failed\n");
     fprintf(stderr, " %s\n", mysql_stmt_error(mysql_stmt_));
+    mysql_stmt_close(mysql_stmt_);
     return;
   }
 
-  auto param_count= mysql_stmt_param_count(mysql_stmt_);
-  //std::cout << "param_count: " << param_count << std::endl;
+  // auto param_count= mysql_stmt_param_count(mysql_stmt_);
+  // std::cout << "## param_count: " << param_count << std::endl;
 }
 
 //void PrepareStatement::Close() {

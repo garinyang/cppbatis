@@ -3,6 +3,8 @@ project(cppbatis)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# add_definitions("-Wall -g")
+
 # 基础依赖
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(/usr/local/include)

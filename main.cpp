@@ -31,12 +31,43 @@ int main() {
   // 创建一个ps对象
   auto ps = std::make_unique<PrepareStatement>(conn);
 
-  // 拼装 sql
+  // 1.拼装插入 sql
+  std::stringstream ss_w;
+  ss_w << "INSERT INTO " << "user(name,age,email,ttt)";
+  ss_w << " VALUES(?, ?, ?, ?)";
+
+  // 验证 sql
+  ps->Prepare(ss_w.str());
+
+  // 设置 where 条件 & 绑定
+  std::string name = "这是中文";
+  ps->SetString(0, name);
+  
+  int32_t age = 22;
+  ps->SetInt32(1, age);
+  
+  std::string email = "xxx@xxx.com";
+  ps->SetString(2, email);
+
+  std::string ttt = "hahahah";
+  ps->SetString(3, ttt);
+
+  // 绑定参数
+  ps->BindParam();
+
+  // 更新
+  if (!ps->Update()) {
+    std::cout << "update failed." << std::endl;
+    return -1;
+  }
+
+  // std::cout << "affacted: " << ps->GetAffactedRows() << std::endl;
+
+  // 2.拼装查询 sql
   std::stringstream ss;
   ss << "SELECT * FROM ";
   ss << " user ";
   ss << " where age in (?, ?)";
-  std::cout << "sql: [" << ss.str() << "]" <<std::endl;
 
   // 验证 sql
   ps->Prepare(ss.str());
@@ -63,25 +94,35 @@ int main() {
     printf("#1# %d, %s, %s, %ld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
   }
 
-  // sleep 10秒
-  // sleep 头文件是 unistd.h  
-  //sleep(10);
+  // 3.拼装更新 sql
+  auto ps1 = std::make_unique<PrepareStatement>(conn);
 
-  std::vector<User> users1;
-  ps->Execute(users1, meta);
+  std::stringstream ss_u;
+  ss_u << "UPDATE " << "user";
+  ss_u << " SET ";
+  ss_u << " name = ? ";
+  ss_u << " WHERE id = ? ";
 
-  // 查询结果处理（打印）
-  for (const auto user : users1) {
-    printf("#2# %d, %s, %s, %ld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
+  // 验证 sql
+  ps1->Prepare(ss_u.str());
 
+  // 设置 where 条件 & 绑定
+  std::string name_u = "张三1";
+  ps1->SetString(0, name_u);
+  
+  int32_t id = 1;
+  ps1->SetInt32(1, id);
 
-    // easy_json 目前对于中文支持有点问题
-//    Json::FastWriter fw;
-//    Json::Value js_user;
-//    user.marshal(js_user);
-//    auto u = fw.write(js_user);
-//    printf("-> %s", u.c_str());
+  // 绑定参数
+  ps1->BindParam();
+
+  // 更新
+  if (!ps1->Update()) {
+    std::cout << "update failed." << std::endl;
+    return -1;
   }
+
+
 
   // 释放链接
   pool.ReleaseConnection(conn);

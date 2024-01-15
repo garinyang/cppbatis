@@ -61,10 +61,30 @@ public:
   void SetString(int index, std::string& value);
 
   /*
-     * 查询 & 更新
+     * 更新
+     * */
+  bool Update() {
+    
+    if (!mysql_stmt_) {
+      fprintf(stderr, " please init prepare statement firstly.\n");
+      return false;
+    }
+
+    // 1. 执行
+    if (mysql_stmt_execute(mysql_stmt_))
+    {
+      fprintf(stderr, "[%d]---> %s\n", mysql_stmt_errno(mysql_stmt_),mysql_stmt_error(mysql_stmt_));
+      fprintf(stderr, "[%d]===> %s\n", mysql_errno(conn_->GetMysqlInstance()), mysql_error(conn_->GetMysqlInstance()));
+      return false;
+    }
+
+    return true;
+  }
+
+  /*
+     * 查询
      * */
   // std::map<std::string, std::pair<int, std::any>>
-
   template <class T> void Execute(std::vector<T>& obj, std::map<std::string, std::pair<int, std::any>>& res) {
 
     if (!mysql_stmt_) {
