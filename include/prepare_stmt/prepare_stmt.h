@@ -93,7 +93,8 @@ public:
       }
 
       // 结果集拼装成json对象
-      Json::Value jres;
+      //Json::Value jres;
+      nlohmann::json jres;
 
       for (auto it = res.begin(); it != res.end(); ++it) {
         // 分拣处理不同类型

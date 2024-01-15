@@ -46,7 +46,7 @@ int main() {
   ps->SetInt32(0, limit_age);
   //std::string name = "张三";
   //ps->SetString(1, name);
-  int64_t age1 = 2120202022;
+  int64_t age1 = 22;
   ps->SetInt64(1, age1);
   // 绑定参数
   ps->BindParam();
@@ -60,19 +60,19 @@ int main() {
 
   // 查询结果处理（打印）
   for (const auto user : users) {
-    printf("#1# %d, %s, %s, %lld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
+    printf("#1# %d, %s, %s, %ld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
   }
 
   // sleep 10秒
   // sleep 头文件是 unistd.h  
-  sleep(10);
+  //sleep(10);
 
   std::vector<User> users1;
   ps->Execute(users1, meta);
 
   // 查询结果处理（打印）
   for (const auto user : users1) {
-    printf("#2# %d, %s, %s, %lld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
+    printf("#2# %d, %s, %s, %ld, %s ##\n", user.id, user.name.data(), user.email.data(), user.age, user.ttt.data());
 
 
     // easy_json 目前对于中文支持有点问题

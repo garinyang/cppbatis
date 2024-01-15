@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 # 基础依赖
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(/usr/local/include)
-include_directories(/usr/local/jsoncpp-1.9.5/include)
+# include_directories(/usr/local/jsoncpp-1.9.5/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/util)
 message("###${CMAKE_SOURCE_DIR}")
 
 #基础库路径
@@ -25,4 +26,5 @@ add_library(${PROJECT_NAME}
 add_executable(${PROJECT_NAME}_test
         main.cpp)
 
-target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} mysqlclient jsoncpp)
+# target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} mysqlclient jsoncpp)
+target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} mysqlclient)
