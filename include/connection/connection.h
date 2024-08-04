@@ -21,21 +21,19 @@
 class Connection {
 public:
 
-  Connection();
+  Connection(const std::string& host, unsigned port, const std::string& user, const std::string& passwd, const std::string& db);
 
   ~Connection();
 
   MYSQL* GetMysqlInstance();
 
+  /*
+   * 查看mysql连接是否正常
+   * */
+  bool IsAlive();
+
 private:
-
-  std::string host_;
-  unsigned port_;
-  std::string user;
-  std::string passwd;
-
   MYSQL* mysql_ = nullptr; // mysql 连接对象
-
 };
 
 

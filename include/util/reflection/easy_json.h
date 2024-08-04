@@ -11,6 +11,7 @@
 #include "json/json.hpp"
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -32,31 +33,47 @@ struct TestUnmarshalFunc {
 
 //如果对象自身含有 unmarshal 方法，则调用对象的unmarshal
 template <typename T, typename enable_if<TestUnmarshalFunc<T>::has, int>::type = 0>
-inline bool Unmarshal(T& obj, const nlohmann::json& root) {
+inline bool Unmarshal(T& obj, nlohmann::json& root) {
   return obj.unmarshal(root);
 }
 
 //如果对象为enum类型，则转为对应的枚举类型
 template <typename T, typename enable_if<TestUnmarshalFunc<T>::has_enum, int>::type = 0>
-inline bool Unmarshal(T& obj, const nlohmann::json& root) {
+inline bool Unmarshal(T& obj, nlohmann::json& root) {
   int temp = root.get<int>();
   obj      = static_cast<T>(temp);
   return true;
 }
 
 //特例化基本类型 int long bool float double string char
+// template <int = 0>
+// inline bool Unmarshal(char& obj, nlohmann::json& root) {
+//   if (!root.is_string())
+//     return false;
+//   auto tmp = root.get<std::string>();
+//   assert(tmp.size() == 1);
+//   obj = tmp[0];
+//   return true;
+// }
+
 template <int = 0>
-inline bool Unmarshal(char& obj, const nlohmann::json& root) {
-  if (!root.is_string())
+inline bool Unmarshal(int8_t& obj, nlohmann::json& root) {
+  if (!root.is_number_integer())
     return false;
-  auto tmp = root.get<std::string>();
-  assert(tmp.size() == 1);
-  obj = tmp[0];
+  obj = root.get<int8_t>();
   return true;
 }
 
 template <int = 0>
-inline bool Unmarshal(uint16_t& obj, const nlohmann::json& root) {
+inline bool Unmarshal(uint8_t& obj, nlohmann::json& root) {
+  if (!root.is_number_unsigned())
+    return false;
+  obj = root.get<uint8_t>();
+  return true;
+}
+
+template <int = 0>
+inline bool Unmarshal(int16_t& obj, nlohmann::json& root) {
   if (!root.is_number_integer())
     return false;
   obj = root.get<int16_t>();
@@ -64,7 +81,23 @@ inline bool Unmarshal(uint16_t& obj, const nlohmann::json& root) {
 }
 
 template <int = 0>
-inline bool Unmarshal(uint32_t& obj, const nlohmann::json& root) {
+inline bool Unmarshal(uint16_t& obj, nlohmann::json& root) {
+  if (!root.is_number_unsigned())
+    return false;
+  obj = root.get<uint16_t>();
+  return true;
+}
+
+template <int = 0>
+inline bool Unmarshal(int32_t& obj, nlohmann::json& root) {
+  if (!root.is_number_integer())
+    return false;
+  obj = root.get<int32_t>();
+  return true;
+}
+
+template <int = 0>
+inline bool Unmarshal(uint32_t& obj, nlohmann::json& root) {
   if (!root.is_number_unsigned())
     return false;
   obj = root.get<uint32_t>();
@@ -72,31 +105,23 @@ inline bool Unmarshal(uint32_t& obj, const nlohmann::json& root) {
 }
 
 template <int = 0>
-inline bool Unmarshal(int64_t& obj, const nlohmann::json& root) {
+inline bool Unmarshal(int64_t& obj, nlohmann::json& root) {
   if (!root.is_number_integer())
     return false;
-  obj = root.get<uint64_t>();
+  obj = root.get<int64_t>();
   return true;
 }
 
 template <int = 0>
-inline bool Unmarshal(uint64_t& obj, const nlohmann::json& root) {
+inline bool Unmarshal(uint64_t& obj, nlohmann::json& root) {
   if (!root.is_number_unsigned())
     return false;
   obj = root.get<uint64_t>();
   return true;
 }
 
-template <int = 0>
-inline bool Unmarshal(int& obj, const nlohmann::json& root) {
-  if (!root.is_number_integer())
-    return false;
-  obj = root.get<int32_t>();
-  return true;
-}
-
 // template <int = 0>
-// inline bool Unmarshal(long& obj, const nlohmann::json& root) {
+// inline bool Unmarshal(long& obj, nlohmann::json& root) {
 //   if (!root.is_number_integer())
 //     return false;
 //   obj = root.get<int64_t>();
@@ -104,7 +129,7 @@ inline bool Unmarshal(int& obj, const nlohmann::json& root) {
 // }
 
 template <int = 0>
-inline bool Unmarshal(bool& obj, const nlohmann::json& root) {
+inline bool Unmarshal(bool& obj, nlohmann::json& root) {
   if (!root.is_boolean())
     return false;
   obj = root.get<bool>();
@@ -112,23 +137,27 @@ inline bool Unmarshal(bool& obj, const nlohmann::json& root) {
 }
 
 template <int = 0>
-inline bool Unmarshal(float& obj, const nlohmann::json& root) {
-  if (!root.is_number_float())
-    return false;
-  obj = root.get<float>();
+inline bool Unmarshal(float& obj, nlohmann::json& root) {
+  if (root.is_number_float())
+    obj = root.get<float>();
+  else if (root.is_number_integer())
+    obj = static_cast<float>(root.get<int32_t>());
+  else return false;
   return true;
 }
 
 template <int = 0>
-inline bool Unmarshal(double& obj, const nlohmann::json& root) {
-  if (!root.is_number_float())
-    return false;
-  obj = root.get<float>();
+inline bool Unmarshal(double& obj, nlohmann::json& root) {
+  if (root.is_number_float())
+    obj = root.get<float>();
+  else if (root.is_number_integer())
+    obj = static_cast<double>(root.get<int32_t>());
+  else return false;
   return true;
 }
 
 template <int = 0>
-inline bool Unmarshal(string& obj, const nlohmann::json& root) {
+inline bool Unmarshal(string& obj, nlohmann::json& root) {
   if (!root.is_string())
     return false;
   obj = root.get<string>();
@@ -136,7 +165,7 @@ inline bool Unmarshal(string& obj, const nlohmann::json& root) {
 }
 
 template <int = 0>
-inline bool Unmarshal(char* obj, const nlohmann::json& root) {
+inline bool Unmarshal(char* obj, nlohmann::json& root) {
   if (!root.is_string())
     return false;
   strcpy(obj, root.get<std::string>().c_str());
@@ -144,17 +173,20 @@ inline bool Unmarshal(char* obj, const nlohmann::json& root) {
 }
 //特例化stl容器或其他不含unmarshal方法的对象
 template <typename T>
-bool Unmarshal(vector<T>&, const nlohmann::json&);  //在模板相互循环调用对方时,必须先声明,使所有类型的 模板可见!
+bool Unmarshal(vector<T>&, nlohmann::json&);  //在模板相互循环调用对方时,必须先声明,使所有类型的 模板可见!
 template <typename T>
-bool Unmarshal(map<string, T>&, const nlohmann::json&);
+bool Unmarshal(map<string, T>&, nlohmann::json&);
 template <typename T>
-bool Unmarshal(map<int, T>& obj, const nlohmann::json& root);
+bool Unmarshal(map<int, T>& obj, nlohmann::json& root);
 template <typename T>
-bool Unmarshal(map<long, T>& obj, const nlohmann::json& root);
+bool Unmarshal(map<long, T>& obj, nlohmann::json& root);
+
+template <typename T>
+bool Unmarshal(optional<T>& obj, nlohmann::json& root);  // optional 类型, 表示该字段可以为空
 
 // vector
 template <typename T>
-bool Unmarshal(vector<T>& obj, const nlohmann::json& root) {
+bool Unmarshal(vector<T>& obj, nlohmann::json& root) {
 #if 0
   if (!root.isArray())
     return false;
@@ -168,7 +200,7 @@ bool Unmarshal(vector<T>& obj, const nlohmann::json& root) {
   }
 #else
   if (!root.is_array())
-  return false;
+   return false;
   obj.clear();
   bool ret = true;
   for (int i = 0; i < root.size(); ++i) {
@@ -183,7 +215,7 @@ bool Unmarshal(vector<T>& obj, const nlohmann::json& root) {
 
 // map key:string
 template <typename T>
-bool Unmarshal(map<string, T>& obj, const nlohmann::json& root) {
+bool Unmarshal(map<string, T>& obj, nlohmann::json& root) {
 #if 0
   if (!root.isObject())
     return false;
@@ -210,7 +242,7 @@ bool Unmarshal(map<string, T>& obj, const nlohmann::json& root) {
 
 // map key:int
 template <typename T>
-bool Unmarshal(map<int, T>& obj, const nlohmann::json& root) {
+bool Unmarshal(map<int, T>& obj, nlohmann::json& root) {
 #if 0
   if (!root.isObject())
     return false;
@@ -237,7 +269,7 @@ bool Unmarshal(map<int, T>& obj, const nlohmann::json& root) {
 
 // map key:long
 template <typename T>
-bool Unmarshal(map<long, T>& obj, const nlohmann::json& root) {
+bool Unmarshal(map<long, T>& obj, nlohmann::json& root) {
   // if (!root.isObject())
   if (!root.is_object())
     return false;
@@ -257,6 +289,19 @@ bool Unmarshal(map<long, T>& obj, const nlohmann::json& root) {
     }  
   #endif
   return ret;
+}
+
+// optional
+template <typename T>
+bool Unmarshal(optional<T>& obj, nlohmann::json& root) {
+  T tmp;  // 类型T一定要含有默认构造器！
+  if (Unmarshal(tmp, root)) {
+    obj = tmp;
+  }
+  else {
+    obj = std::nullopt;
+  }
+  return true;
 }
 
 /*======  Marshal实现  =======*/
@@ -303,7 +348,10 @@ template <typename T>
 void Marshal(const map<int, T>& obj, nlohmann::json& root);
 template <typename T>
 void Marshal(const map<long, T>& obj, nlohmann::json& root);
-;
+
+template <typename T>
+void Marshal(const optional<T>& obj, nlohmann::json& root);  // optional 类型, 表示该字段可以为空
+
 // vector
 template <typename T>
 void Marshal(const vector<T>& obj, nlohmann::json& root) {
@@ -344,6 +392,14 @@ void Marshal(const map<long, T>& obj, nlohmann::json& root) {
 template <typename T>
 void Marshal(std::shared_ptr<T> obj, nlohmann::json& root) {
   Marshal(*obj.get(), root);
+}
+
+// optional 类型, 表示该字段可以为空
+template <typename T>
+void Marshal(const optional<T>& obj, nlohmann::json& root) {
+  if (obj) {
+    Marshal(obj.value(), root);
+  }
 }
 
 /*========  string 版本  ===========*/
@@ -414,7 +470,7 @@ bool Unmarshal(T& obj, const string& s) {
 //在一个对象内部生成 unmarshal 函数.
 //尽力解析每个field,但不保证全部正确,未被正确解析的field保持原有值不变. 所有field 均被正确解析时返回true
 #define UNMARSHAL_OBJ(...)                                  \
-    bool unmarshal(const nlohmann::json& root) {               \
+    bool unmarshal(nlohmann::json& root) {               \
         bool ret = true;                                    \
         FOR_EACH(__unmarshal_obj_each_field__, __VA_ARGS__) \
         return ret;                                         \
@@ -429,9 +485,19 @@ bool Unmarshal(T& obj, const string& s) {
     void marshal(nlohmann::json& root) const { FOR_EACH(__marshal_obj_each_field__, __VA_ARGS__) }
 #define __marshal_obj_each_field__(field) Json::Marshal(field, root[#field]);
 
+//在一个对象内部生成getTableName 函数,用于生成表名
+#define GET_TABLE_NAME(table_name) \
+    static std::string getTableName() { return #table_name; }
+
+//在一个对象内部生成getQueryBaseSql 函数,用于生成查询语句的基本部分
+#define GET_QUERY_BASE_SQL(...) \
+    static std::string getQueryBaseSql() { return std::string("SELECT ") + #__VA_ARGS__ + " FROM " + getTableName() + std::string(" "); }
+
 //让一个对象可以被 unmarshal和marshal
-#define JSON_HELP(...)         \
+#define JSON_HELP(table_name, ...)         \
     UNMARSHAL_OBJ(__VA_ARGS__) \
-    MARSHAL_OBJ(__VA_ARGS__)
+    MARSHAL_OBJ(__VA_ARGS__)   \
+    GET_TABLE_NAME(table_name) \
+    GET_QUERY_BASE_SQL(__VA_ARGS__)
 
 #endif // CPPBATIS_EASY_JSON_H

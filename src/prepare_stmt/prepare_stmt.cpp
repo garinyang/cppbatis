@@ -5,11 +5,11 @@
  */
 #include "prepare_stmt/prepare_stmt.h"
 
-PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):conn_(conn_ptr), res_(nullptr) {
+PrepareStatement::PrepareStatement() : res_(nullptr) {
   //std::cout << "[Constructor] PrepareStatement" << std::endl;
-  if (nullptr == conn_ptr) {
-    fprintf(stderr, "invalid connection handle!!!");
-    return ;
+  conn_ = SingletonBase<ConnectPool>::ObtainInstance().GetConnection();
+  if (conn_ == nullptr) {
+    return;
   }
 
   // 设置字符集为UTF-8
@@ -35,9 +35,30 @@ PrepareStatement::PrepareStatement(const std::shared_ptr<Connection> conn_ptr):c
 }
 
 PrepareStatement::~PrepareStatement() {
+  if (conn_ == nullptr) {
+    return;
+  }
 
+  CleanUpMysqlRes();
+
+  // 关闭stmt对象
+  if (nullptr != mysql_stmt_) {
+    if (mysql_stmt_close(mysql_stmt_))
+    {
+      /* mysql_stmt_close() invalidates stmt, so call          */
+      /* mysql_error(mysql) rather than mysql_stmt_error(stmt) */
+      fprintf(stderr, " failed while closing the statement\n");
+      fprintf(stderr, " %s\n", mysql_error(conn_->GetMysqlInstance()));
+      return ;
+    }
+  }
+
+  SingletonBase<ConnectPool>::ObtainInstance().ReleaseConnection(conn_);
+
+};
+
+void PrepareStatement::CleanUpMysqlRes() {
   if (res_) {
-
     // 获取结果集中每一行包含的列数
     int field_nums = mysql_num_fields(res_);
     for (auto i = 0; i < field_nums; ++i) {
@@ -49,21 +70,9 @@ PrepareStatement::~PrepareStatement() {
 
     // 释放结果集对象
     mysql_free_result(res_);
-
-    // 关闭stmt对象
-    if (nullptr != mysql_stmt_) {
-      if (mysql_stmt_close(mysql_stmt_))
-      {
-        /* mysql_stmt_close() invalidates stmt, so call          */
-        /* mysql_error(mysql) rather than mysql_stmt_error(stmt) */
-        fprintf(stderr, " failed while closing the statement\n");
-        fprintf(stderr, " %s\n", mysql_error(conn_->GetMysqlInstance()));
-        return ;
-      }
-    }
+    res_ = nullptr;
   }
-
-};
+}
 
 void PrepareStatement::Prepare(std::string sql) {
 

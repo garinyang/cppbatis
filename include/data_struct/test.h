@@ -15,6 +15,6 @@ struct Test {
   char password[128];
   int create_time;
 
-  JSON_HELP(username, email, password, create_time);
+  JSON_HELP(test, username, email, password, create_time);
 };
 #endif // CPPBATIS_TEST_H

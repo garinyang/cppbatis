@@ -14,7 +14,7 @@
 
 #include "connection/connection.h"
 
-Connection::Connection() {
+Connection::Connection(const std::string& host, unsigned port, const std::string& user, const std::string& passwd, const std::string& db) {
   // std::cout << ">>> construct connection" << std::endl;
   // init mysql
   mysql_ = mysql_init(nullptr);
@@ -26,15 +26,15 @@ Connection::Connection() {
 
   // connect
   auto res = mysql_real_connect(mysql_,
-                              "127.0.0.1",
-                              "root",
-                              "root",
-                              "cppbatis",
-                              3306,
+                              host.c_str(),
+                              user.c_str(),
+                              passwd.c_str(),
+                              db.c_str(),
+                              port,
                               nullptr,
                               0);
   if (!res) {
-    fprintf(stderr, "mysql_real_connect failed, error_no:%d, err_info:%s\n",
+    fprintf(stderr, "mysql_real_connect failed, error_no:%u, err_info:%s\n",
             mysql_errno(mysql_), mysql_error(mysql_));
     exit(0);  // 数据库异常中断
   }
@@ -53,5 +53,9 @@ Connection::~Connection() {
 
 MYSQL* Connection::GetMysqlInstance() {
   return mysql_;
+}
+
+bool Connection::IsAlive() {
+  return mysql_ping(mysql_) == 0;
 }
 

@@ -1,14 +1,13 @@
 cmake_minimum_required(VERSION 3.14)
 project(cppbatis)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 # add_definitions("-Wall -g")
 
 # 基础依赖
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(/usr/local/include)
-# include_directories(/usr/local/jsoncpp-1.9.5/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/util)
 message("###${CMAKE_SOURCE_DIR}")
 
@@ -16,11 +15,10 @@ message("###${CMAKE_SOURCE_DIR}")
 link_directories(/usr/local/lib)
 
 #头文件
-#include_directories(connection data_struct prepare_stmt reflection)
 include_directories(include)
 
 # 生成动态库
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
         src/connection/connection.cpp
         src/prepare_stmt/prepare_stmt.cpp)
 

@@ -1,0 +1,9 @@
+{
+    "mysql": {
+        "host": "127.0.0.1",
+        "port": 3306,
+        "db": "test",
+        "user": "debian-sys-maint",
+        "passwd": "WkHKP9elSWtjcn74"
+    }
+}
