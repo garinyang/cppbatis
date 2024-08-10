@@ -12,8 +12,9 @@
 #include <sstream>
 #include <mysql/mysql.h>
 #include <cstring>
+#include "connection/singleton_base.h"
 #include "connection/connection.h"
-#include "data_struct/user.h"
+#include "connection/connection_pool.h"
 #include <vector>
 #include <map>
 #include <any>
@@ -24,21 +25,17 @@
 class PrepareStatement {
 
 public:
-
   /*
-   * 默认构造函数
+   * 构造函数
    * */
-  PrepareStatement() = default;
-
-  /*
-   * 重载构造函数
-   * */
-  PrepareStatement(const std::shared_ptr<Connection> conn_ptr);
+  PrepareStatement();
 
   /*
    * 析构函数
    * */
   ~PrepareStatement();
+
+  void CleanUpMysqlRes();
 
   /*
    * 预执行sql
@@ -73,8 +70,8 @@ public:
     // 1. 执行
     if (mysql_stmt_execute(mysql_stmt_))
     {
-      fprintf(stderr, "[%d]---> %s\n", mysql_stmt_errno(mysql_stmt_),mysql_stmt_error(mysql_stmt_));
-      fprintf(stderr, "[%d]===> %s\n", mysql_errno(conn_->GetMysqlInstance()), mysql_error(conn_->GetMysqlInstance()));
+      fprintf(stderr, "Update mysql_stmt[%u]---> %s\n", mysql_stmt_errno(mysql_stmt_),mysql_stmt_error(mysql_stmt_));
+      fprintf(stderr, "Update mysql[%u]===> %s\n", mysql_errno(conn_->GetMysqlInstance()), mysql_error(conn_->GetMysqlInstance()));
       return false;
     }
 
@@ -85,7 +82,8 @@ public:
      * 查询
      * */
   // std::map<std::string, std::pair<int, std::any>>
-  template <class T> void Execute(std::vector<T>& obj, std::map<std::string, std::pair<int, std::any>>& res) {
+  template <class T, class Enable = std::enable_if_t<Json::TestUnmarshalFunc<T>::has>> 
+  void Execute(std::vector<T>& obj, std::map<std::string, std::pair<int, std::any>>& res) {
 
     if (!mysql_stmt_) {
       fprintf(stderr, " please init prepare statement firstly.\n");
@@ -95,8 +93,8 @@ public:
     // 1. 执行
     if (mysql_stmt_execute(mysql_stmt_))
     {
-      fprintf(stderr, " %s\n", mysql_stmt_error(mysql_stmt_));
-      fprintf(stderr, " %s\n", mysql_error(conn_->GetMysqlInstance()));
+      fprintf(stderr, "Execute mysql_stmt[%u]--> %s\n", mysql_stmt_errno(mysql_stmt_), mysql_stmt_error(mysql_stmt_));
+      fprintf(stderr, "Execute mysql[%u]--> %s\n", mysql_errno(conn_->GetMysqlInstance()), mysql_error(conn_->GetMysqlInstance()));
       return;
     }
 
@@ -178,6 +176,11 @@ public:
    * 绑定参数
    * */
   void BindParam();
+
+  /*
+   * 判断连接是否有效
+   * */
+  bool isConnectionValid() { return conn_ != nullptr; }
 
 private:
 

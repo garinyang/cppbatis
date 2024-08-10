@@ -16,7 +16,8 @@ struct User{
   std::string email;
   int64_t age;
   std::string ttt;
-  JSON_HELP(id, name, email, age, ttt);
+  char address[100];
+  JSON_HELP(user, id, name, email, age, ttt, address);
 };
 
 
